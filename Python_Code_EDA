@@ -71,7 +71,7 @@ frequency_mapping = {
 df['purchase_frequency_days'] = df['frequency_of_purchases'].map(frequency_mapping)
 
 # ----------------------------
-# Remove unwanted column
+# Removed promo_code_used column as it was same as dicount_applied column
 # ----------------------------
 
 df = df.drop("promo_code_used", axis=1)
