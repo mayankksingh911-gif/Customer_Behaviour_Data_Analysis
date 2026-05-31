@@ -1,0 +1,32 @@
+import pandas as pd
+url = "https://raw.githubusercontent.com/amlanmohanty1/customer-trends-data-analysis-SQL-Python-PowerBI/main/customer_shopping_behavior.csv"
+
+df = pd.read_csv(url)
+
+df.head()
+df.describe()
+df.info()
+df.isnull().sum()
+df['review_rating'] = df.groupby('category')['review_rating'].transform(lambda x: x.fillna(x.median()))
+df.isnull().sum()
+df.columns = df.columns.str.lower()
+df.columns = df.columns.str.replace(' ', '_')
+labels  = ['Young Adult', 'Adult', 'Middle Aged','Senior']
+
+df["age_group"] = pd.qcut(df['age'], q=4 , labels = labels) 
+# creating purchase_frequency_days 
+
+frequency_mapping = {'Weekly': 7,
+                     'Fortnightly': 14,
+                     'Quarterly': 90,
+                     'Bi-Weekly': 14,
+                     'Annually' : 365,
+                     'Once': 1,
+                     'Monthly': 30,
+                     'Every 3 Month': 90}
+
+df['purchase_frequency_days'] = df['frequency_of_purchases'].map(frequency_mapping)
+
+df = df.drop("promo_code_used", axis=1)
+
+df.to_csv("customer_shopping_behavior_cleaned.csv", index=False)
